@@ -1,2 +1,4 @@
 Implementation of matrix classes, in Cpp for the moment
 I prefer to use Cpp for matrixes, since it's most straightforward and efficient
+
+Extend the trans matrix to pointer-to-pointer matrixes
