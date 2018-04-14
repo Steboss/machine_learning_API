@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <new>
 #include "simpleMatrix.h"
+#include "../vector/simpleVector.h"
 
 using std::cout; using std::endl;
 
@@ -195,6 +196,20 @@ Matrix Matrix::operator*(double b) const{
 
 Matrix operator*(double b, const Matrix& A ){
   return A*b;
+}
+
+Vector Matrix::operator*(const Vector& v)const {
+  double temp;
+  Vector c(nRows); // vector of 0;
+  for (int i =0; i<nRows;i++){
+    temp = 0;
+    for ( int j=0; j<nCols;j++){
+      temp += pA[i][j]*v[j];
+    }
+    c.pA[i]+=temp;
+  }
+
+  return c;
 }
 
 //transpose

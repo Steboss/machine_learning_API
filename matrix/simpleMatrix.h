@@ -1,6 +1,8 @@
 #ifndef SIMPLEMATRIX_H
 #define SIMPLEMATRIX_H
 
+#include "../vector/simpleVector.h"
+
 class Matrix{
   //class mameber
   int nRows, nCols;
@@ -24,6 +26,7 @@ public:
   Matrix& operator+=(const Matrix& B);
   Matrix operator*(const Matrix& B) const;
   Matrix operator*(double b) const;
+  Vector operator*(const Vector& v) const;
   const double* operator[](int i) const{return pA[i];}
   //define the transpose
   Matrix trans() const ;
@@ -31,6 +34,7 @@ public:
   void printMatrix() const;
   int getnRows() const {return nRows;}
   int getnCols() const {return nCols;}
+
 
 };
 
