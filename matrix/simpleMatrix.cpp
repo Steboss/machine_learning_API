@@ -253,18 +253,20 @@ Vector Matrix::forward(const Vector& RHS) const{
   }
   else{
     cout << "Singular Matrix, cannot solve the system"<<endl;
+    exit(1);
   }
   //now go on with all the other Rows
   for(int i =1; i<nRows; i++){
     if(pA[i][i]!=0){
       temp = RHS.pA[i];
-      for(int k = (i+1); k<nRows-1;k++){
+      for(int k = (i+1); k<i;k++){
         temp -= b.pA[k]*pA[i][k];
       }
       b.pA[i] = temp/pA[i][i];
     }
     else{
       cout<<" Singular Matrix, cannot solve the system"<<endl;
+      exit(1);
     }
   }
   return b;
