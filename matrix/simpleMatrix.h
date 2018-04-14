@@ -30,6 +30,10 @@ public:
   const double* operator[](int i) const{return pA[i];}
   //define the transpose
   Matrix trans() const ;
+  //backward algorithm to solve linear system -- upper-triangular
+  Vector backward(const Vector& RHS) const;
+  //forwardalgorithm to solve linear system --lower-triangular
+  Vector forward(const Vector& RHS) const;
   //print matrix
   void printMatrix() const;
   int getnRows() const {return nRows;}

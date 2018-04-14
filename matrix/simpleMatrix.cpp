@@ -68,6 +68,7 @@ Matrix::Matrix(const Matrix &A){
   }
 }
 
+/*Opeartors*/
 //overload the operator =
 Matrix& Matrix::operator=(const Matrix& A){
 
@@ -96,6 +97,8 @@ Matrix& Matrix::operator=(const Matrix& A){
   }
   return *this;
 }
+
+/*Destructor*/
 //Define the destructors
 Matrix::~Matrix(){
   if(pA!=0){
@@ -106,6 +109,7 @@ Matrix::~Matrix(){
   }
 }
 
+/*Print*/
 //function to print the Matrix elements
 void Matrix::printMatrix() const{
   for (int i =0; i<nRows; i++){
@@ -115,7 +119,7 @@ void Matrix::printMatrix() const{
     cout << endl;
   }
 }
-
+/*Memory check*/
 //check the pointer
 void Matrix::pointerCheck() const {
   //if the pointer is null
@@ -132,7 +136,7 @@ void Matrix::pointerCheck(int i )const {
   }
 }
 //here define all the arithmetics
-
+/*Arithmetics*/
 Matrix Matrix::operator+(const Matrix& B) const{
   if(nRows !=B.nRows || nCols !=B.nCols){
     cout << "Mismatch between dimensions, cannot perform addition for matrix dimensions" << nRows\
@@ -165,7 +169,6 @@ Matrix& Matrix::operator+=(const Matrix& B){
   return *this;
 }
 
-//multiplication
 Matrix Matrix::operator*(const Matrix& B) const{
   if( nCols !=B.nRows){
     cout << "Mismatch between nCols and nRows, cannot perform multiplication for matrix dimensions" << nRows\
@@ -197,7 +200,7 @@ Matrix Matrix::operator*(double b) const{
 Matrix operator*(double b, const Matrix& A ){
   return A*b;
 }
-
+/*Multiplication by a Vector*/
 Vector Matrix::operator*(const Vector& v)const {
   double temp;
   Vector c(nRows); // vector of 0;
@@ -211,7 +214,61 @@ Vector Matrix::operator*(const Vector& v)const {
 
   return c;
 }
+/*backward algorithm to solve linear system --lower triangular*/
+Vector Matrix::backward(const Vector& RHS) const{
+  double temp;
+  Vector b(nRows, 0.0)//this is the solution
+  //last line
+  if(pA[nRows-1][nRows-1]!=0){
+    b.pA[nRows-1] = RHS.pA[nRows-1]/pA[nRows-1][nRows-1];
+  }
+  else{
+    cout<<"Singular Matrix, cannot solve the system"<< endl;
+    exit(1);
+  }
 
+  //all the linest from the last one till the first
+  for (int i =(nRows-2); i>=0; i--){
+    if(pA[i][i]!=0){
+      temp=RHS.pA[i];
+      for(int k=(i+1); k<nRows;k++){
+        temp -=b.pA[k]*pA[i][k];
+      }
+      b.pA[i]=temp/pA[i][i];
+    }
+    else{
+      cout<<" Singular Matrix, cannot solve the system"<< endl;
+      exit(1);
+    }
+  }
+  return b;
+}
+/*forward algorithm for linear system --uper triangular*/
+Vector Matrix::forward(const Vector& RHS) const{
+  double temp;
+  Vector b(nRows, 0.0);
+  //solve the first line
+  if (pA[0][0]!=0){
+    b.pA[0] = RHS.pA[0]/pA[0][0];
+  }
+  else{
+    cout << "Singular Matrix, cannot solve the system"<<endl;
+  }
+  //now go on with all the other Rows
+  for(int i =1; i<nRows; i++){
+    if(pA[i][i]!=0){
+      temp = RHS.pA[i];
+      for(int k = (i+1); k<nRows-1;k++){
+        temp -= b.pA[k]*pA[i][k];
+      }
+      b.pA[i] = temp/pA[i][i];
+    }
+    else{
+      cout<<" Singular Matrix, cannot solve the system"<<endl;
+    }
+  }
+  return b;
+}
 //transpose
 Matrix Matrix::trans() const{
   Matrix B(nCols, nRows, 0.0);
